@@ -13,7 +13,7 @@ namespace ApplicantChallenge
 
             try
             {
-                String path = Environment.CurrentDirectory + filePath;
+                var path = Path.Combine(Environment.CurrentDirectory, filePath);
                 using (StreamReader sr = File.OpenText(path))
                 {
                     StringBuilder sb = new StringBuilder();

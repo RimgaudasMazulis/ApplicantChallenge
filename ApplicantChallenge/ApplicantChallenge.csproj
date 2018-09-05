@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileReader.cs" />
-    <Compile Include="IPyramid.cs" />
+    <Compile Include="Interfaces\IPyramid.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

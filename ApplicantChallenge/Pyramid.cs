@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApplicantChallenge.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace ApplicantChallenge
 {
     public class Pyramid : IPyramid
     {
-        private readonly string filePath = "/App_Data/Pyramid.txt";
+        private string _filePath { get; set; }
         private const char Separator = ' ';
 
         // Used for saving previous line values to assign as children nodes for parent nodes
@@ -34,11 +35,12 @@ namespace ApplicantChallenge
             get { return _validPaths; }
         }
 
-        public Pyramid()
+        public Pyramid(String filePath)
         {
             _nodes = new List<Node>();
             _previousLineNodes = new List<Node>();
             _currentLineNodes = new List<Node>();
+            _filePath = filePath;
 
             BuildNodePyramid();
         }
@@ -48,10 +50,10 @@ namespace ApplicantChallenge
         /// </summary>
         public void BuildNodePyramid()
         {
-            var lines = FileReader.ReadFile(filePath).ToArray();
+            var lines = FileReader.ReadFile(_filePath).ToArray();
             if (!lines.Any())
             {
-                Console.WriteLine("Input file ({0}) did not contain any data.", filePath);
+                Console.WriteLine("Input file ({0}) did not contain any data.", _filePath);
             }
 
             // Reverse list to work from bottom rows up
@@ -82,7 +84,7 @@ namespace ApplicantChallenge
         {
             _validPaths = GetValidPaths(PyramidTopNode);
 
-            var maxSumSequence = _validPaths.Where(w => w.Sum(s => s) == _validPaths.Max(o => o.Sum(item => item))).FirstOrDefault();
+            var maxSumSequence = _validPaths.OrderByDescending(x => x.Sum(i => i)).First();
             var maxSum = maxSumSequence.Sum(item => item);
 
             Console.WriteLine("Max sum: {0}\r\nPath: {1}\r\n", maxSum, String.Join(",", maxSumSequence));
@@ -194,7 +196,8 @@ namespace ApplicantChallenge
 
                 if (_previousLineNodes.Any())
                 {
-                    for (int i = indexOfCurrentNumber; i < indexOfCurrentNumber + 2; i++)
+                    // Because this is a pyramid, every lower level has one more element in the row than previois row, thus for each upper level index x, its children will be x and x + 1
+                    for (int i = indexOfCurrentNumber; i < indexOfCurrentNumber + 2; i++) 
                     {
                         _previousLineNodes[i].AddParent(node);
                         node.AddChildren(_previousLineNodes[i]);
@@ -205,7 +208,7 @@ namespace ApplicantChallenge
             }
             else
             {
-                Console.WriteLine("Error in file ({0}) ! ({1}) is not a number.", filePath, numbers[indexOfCurrentNumber]);
+                Console.WriteLine("Error in file ({0}) ! ({1}) is not a number.", _filePath, numbers[indexOfCurrentNumber]);
             }
         }
     }

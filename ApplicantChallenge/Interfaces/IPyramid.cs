@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ApplicantChallenge
+namespace ApplicantChallenge.Interfaces
 {
     public interface IPyramid
     {
